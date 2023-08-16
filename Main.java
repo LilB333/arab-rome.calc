@@ -5,17 +5,16 @@ public class Main {
     static int res;
 
     public static void main(String[] args) throws ScannerException {
-
         System.out.println("Введите операцию между двумя числами. В формате \"7 + 5\" или \"V + III\": ");
+        
         // считываем строку
         String str = scanner.nextLine();
+        
         // передаем строку в метод
         System.out.println(calc(str));
-
     }
 
     public static String calc(String input) throws ScannerException {
-
         int a, b;
         char OP;
         int result;
@@ -28,9 +27,11 @@ public class Main {
         if (numbers.length != 3) {
             throw new ScannerException("Недействительный ввод");
         }
-        // определяем знак операции
+        
+// определяем знак операции
         OP = arithmetic(numbers[1].charAt(0));
 
+// проверяем числа на их принадлежность
         if (romanChecking.trueRoman(numbers[0]) && romanChecking.trueRoman(numbers[2])) {
             a = romanInt(numbers[0]);
             b = romanInt(numbers[2]);
@@ -48,28 +49,20 @@ public class Main {
             throw new ScannerException("Нельзя вводить арабские и римские цифры одновременно");
         }
 
-
-        // проверяем числа на их принадлежность и выводим результат
+// в зависимости от принадлежности выводим результат
         result = calculate(a, b, OP);
-
         if (romanCheck == true) {
             String resultRoman = romanChecking.romanRes(result);
             statement = ("Ответ для римских цифр:\n" + numbers[0] + " " + OP + " " + numbers[2] + " = " + resultRoman);
             return statement;
-
         }
-        // по ходу проверим арабские цифры на минус и 0
         else {
-            if (a>0 && b>0) {
-                statement = ("Ответ для арабских цифр:\n" + a + " " + OP + " " + b + " = " + result);
-                return statement;
-            }
-            else {
-                throw new ScannerException("Нельзя вводить числа с минусом и нуль");
+            statement = ("Ответ для арабских цифр:\n" + a + " " + OP + " " + b + " = " + result);
+            return statement;
             }
         }
     }
-
+// проводим операцию в заисимости от знака
     private static int calculate(int A, int B, char op) {
         switch (op) {
             case '-':
@@ -88,6 +81,7 @@ public class Main {
         return res;
     }
 
+// вычисляем знак операции
     private static char arithmetic(char znak) throws ScannerException {
         char oper;
         if (znak == '-') {
@@ -104,6 +98,7 @@ public class Main {
         return oper;
     }
 
+// превращаем римские цифры в целочисленные
     private static int romanInt(String rome) {
         if (rome.equals("I")) {
             return 1;
@@ -129,7 +124,8 @@ public class Main {
         return -1;
     }
 }
-//
+
+// класс для работы с римскими числами и для различения с арабскими
     class romanChecking {
     static String[] roman = {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX",
             "XXI", "XXII", "XXIII", "XXIV", "XXV", "XXVI", "XXVII", "XXVIII", "XXIX", "XXX", "XXXI", "XXXII", "XXXIII", "XXXIV", "XXXV", "XXXVI", "XXXVII", "XXXVIII", "XXXIX", "XL",
@@ -139,29 +135,27 @@ public class Main {
             "LXXXI", "LXXXII", "LXXXIII", "LXXXIV", "LXXXV", "LXXXVI", "LXXXVII", "LXXXVIII", "LXXXIX", "XC",
             "XCI", "XCII", "XCIII", "XCIV", "XCV", "XCVI", "XCVII", "XCVIII", "XCIX", "C"};
 
+//  переводим целочисленное значение ответа в конечное римское
     public static String romanRes(int numArabian) {
         String res = null;
         try {
             res = roman[numArabian-1];
         }
         catch (ArrayIndexOutOfBoundsException e) {
-            throw new ArrayIndexOutOfBoundsException("Римские числа не имеют 0 и значений с минусом");
+            throw new ArrayIndexOutOfBoundsException("Результат операций с римскими числами не может быть отрицательным или равным 0");
         }
-
         return res;
     }
-
+        
+// проверяем является ли введенное число римским
     public static boolean trueRoman(String rome) {
-
         for (int i = 1; i <= 10; i++) {
-
             if (rome.equals(roman[i - 1])) {
                 return true;
             }
-
         }
-// проверяем подходит ли римское число условиям (в данном случае, если число не парсится в целочисленное, то
-        // это значит, что это - предположительно римское число (или другой символ) меньше I и больше X
+        
+// проверяем подходит ли римское число условиям (в данном случае, если число не парсится в целочисленное, то это значит, что это - предположительно римское число (или другой символ) меньше I и больше X
         try {
             int var = Integer.parseInt(rome);
         } catch (NumberFormatException e) {
